@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            @-webkit-keyframes spin {
+                0% { -webkit-transform: rotate(0deg); }
+                100% { -webkit-transform: rotate(360deg); }
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+
+            input {
+                width: 100%;
+            }
+
+            .rotate {
+                -webkit-animation-name: spin;
+                -webkit-animation-duration: 3s;
+                -webkit-animation-iteration-count: infinite;
+                -webkit-animation-direction: alternate;
+                animation-name: spin;
+                animation-duration: 3s;
+                animation-iteration-count: infinite;
+                animation-direction: alternate;
+            }
+
+            #scene {
+                position: relative;
+                top: 60px;
+                text-align: center;
+            }
+
+            #words span {
+                border: 1px solid #ccc;
+                background: rgba(255,255,155,0.8);
+                text-align: center;
+                font-size: 30px;
+                -webkit-box-shadow: inset 0 0 40px rgba(0,0,0,0.4);
+                box-shadow: inset 0 0 40px rgba(0,0,0,0.4);
+                position: absolute;
+            }
+
+            #words span:nth-child(1) { left: 45%; top: 0px; }
+            #words span:nth-child(2) { left: 25%; top: 100px; }
+            #words span:nth-child(3) { left: 65%; top: 100px; }
+            #words span:nth-child(4) { left: 10%; top: 200px; }
+            #words span:nth-child(5) { left: 45%; top: 200px; }
+            #words span:nth-child(6) { left: 80%; top: 200px; }
+
+        </style>
+    </head>
+    <body>
+        <h1>ViewModel initial issue Demo</h1>
+
+        <div id="control" data-bind="route: message">
+
+            <button  data-bind="click:$data.createViewModels">Click to Create View Models</button>
+
+
+            <br> 
+
+            <br>
+            <a href="#/Start">Click here to start thread4 by Hash Url</a>
+        </div>
+
+        <div id="thread2">
+            <h3>[Failed]2. Created from another thread WITHOUT CTXT</h3>
+            You should get this exception in system out
+
+            <br>
+            Exception in thread "Thread-9" java.lang.IllegalStateException: No presenter active. Use BrwsrCtx.execute!
+
+            <br>
+            <span data-bind="text:$data.currentTime"></span>
+        </div>
+
+        <div id="thread3">
+            <h3>3.[Success] Created from another thread WITH CTXT</h3>
+
+            The viewModel instance has been created with correct Browser Ctxt ( BrwsrCtx.execute(Runnable) )
+            <br>
+            The timestamp  will be updated every 2 seconds
+            <br>
+            <br>
+            <br>
+            <span data-bind="text:$data.currentTime"></span>
+        </div>
+
+
+
+        <div id="thread4">
+            <h3>4 . [Failed] Created from FX thread WITHOUT CTXT, and update it from anther thread</h3>
+
+            The viewModel instance has been created in JavaFx/Gui thread. But it hasn't Executor tech in viewModel.proto.BrwsCtx.
+            <br>
+            You will get following exception when you try to update view model from another thread.
+            <br>
+            <br>
+            <br>Exception in thread "Thread-10" java.lang.IllegalStateException: No presenter active. Use BrwsrCtx.execute!
+            <br>at org.netbeans.html.ko4j.Knockout.valueHasMutated(Knockout.java)
+            <br>at org.netbeans.html.ko4j.KOTech.valueHasMutated(KOTech.java:131)
+            <br>at org.netbeans.html.json.impl.Bindings.valueHasMutated(Bindings.java:106)
+            <br>at org.netbeans.html.json.spi.Proto$2.run(Proto.java:187)
+            <br>at net.java.html.BrwsrCtx$1Wrap.run(BrwsrCtx.java:177)
+            <br>at net.java.html.BrwsrCtx.execute(BrwsrCtx.java:186)
+            <br>at org.netbeans.html.json.spi.Proto.valueHasMutated(Proto.java:183)
+            <br>at world.hello.ThreadData.setCurrentTime(ThreadData.java:16)
+            <br>at world.hello.DataModel$2.run(DataModel.java:102)
+            <br>at java.lang.Thread.run(Thread.java:745)
+            <br>
+            <br>
+            <br>
+            <span data-bind="text:$data.currentTime"></span>
+        </div>
+
+        <!-- ${browser.bootstrap} -->
+    </body>
+</html>
