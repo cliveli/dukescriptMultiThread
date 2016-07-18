@@ -117,6 +117,19 @@
             <span data-bind="text:$data.currentTime"></span>
         </div>
 
+        
+        
+        <div id="thread5">
+            <h3>5 . [Success] Created from FX thread WITHOUT CTXT, Bind it to the right ctxt, and update it from anther thread</h3>
+
+           The viewModel instance has been created with correct Browser Ctxt ( BrwsrCtx.execute(Runnable) )
+            <br>
+            The timestamp  will be updated every 2 seconds
+            <br>
+            <br>
+            <span data-bind="text:$data.currentTime"></span>
+        </div>
+        
         <!-- ${browser.bootstrap} -->
     </body>
 </html>

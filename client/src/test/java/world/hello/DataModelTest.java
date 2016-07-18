@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 public class DataModelTest {
     @Test public void testUIModelWithoutUI() {
         Data model = new Data();
-        model.setMessage("Hello World!");
+//        model.setMessage("Hello World!");
         
     }
 }

@@ -189,6 +189,11 @@
         <version>${net.java.html.version}</version>
         <scope>provided</scope>
     </dependency>
+<!--  <dependency>
+        <groupId>com.dukescript.presenters</groupId>
+        <artifactId>webkit</artifactId>
+        <version>1.0</version>
+    </dependency>-->
   </dependencies>
   <profiles>
       <profile>

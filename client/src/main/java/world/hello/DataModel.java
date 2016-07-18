@@ -38,6 +38,12 @@ final class DataModel {
         // The viewModel we created cannot be updated from another thread.
 
         createViewModelInSameThread("thread4");
+
+
+        createViewModelInAntherThreadAmdBind("thread5");
+        
+        
+
 // Trace Back
 //	at world.hello.DataModel.messageChanged(DataModel.java:37)
 //	at world.hello.Data.setMessage(Data.java:18)
@@ -81,7 +87,6 @@ final class DataModel {
      */
     static void onPageLoad() throws Exception {
         ui = new Data();
-        ui.setMessage("Hello World from HTML and Java!");
         Models.toRaw(ui);
         Router.registerBinding();
         ui.applyBindings();
@@ -120,16 +125,62 @@ final class DataModel {
 
     }
 
-    private static void createViewModelInSameThread(String divId) {
+    private static void createViewModelInSameThread(final String divId) {
         final ThreadData data = new ThreadData();
-        Models.applyBindings(data, divId);
+        data.setCurrentTime(ZonedDateTime.now().toString());
+
+//        Models.applyBindings(data, divId);
         Runnable task = new Runnable() {
 
             @Override
             public void run() {
 
+                ctx.execute(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Models.applyBindings(data, divId);
+                    }
+                });
+
                 while (true) {
                     data.setCurrentTime(ZonedDateTime.now().toString());
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(DataModel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+
+        };
+
+        new Thread(task).start();
+
+    }
+    
+     private static void createViewModelInAntherThreadAmdBind(final String divId) {
+
+//        Models.applyBindings(data, divId);
+        Runnable task = new Runnable() {
+
+            @Override
+            public void run() {
+                ThreadData copy = new ThreadData();
+                copy.setCurrentTime(ZonedDateTime.now().toString());
+                //Change the context
+                final ThreadData afterBind = Models.bind(copy, ctx);
+
+                ctx.execute(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Models.applyBindings(afterBind, divId);
+                    }
+                });
+
+                while (true) {
+                    afterBind.setCurrentTime(ZonedDateTime.now().toString());
                     try {
                         Thread.sleep(2000);
                     } catch (InterruptedException ex) {
